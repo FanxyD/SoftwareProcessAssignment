@@ -51,7 +51,7 @@ class ListViewTest(TestCase):
     def test_uses_list_template(self):
         # response = self.client.get('/lists/the-only-list-in-the-world/')
         list_ = List.objects.create()
-        response = self.client.get(f'/lists/{list_.id}')
+        response = self.client.get(f'/lists/{list_.id}/')
         self.assertTemplateUsed(response, 'list.html')
     
     def test_displays_only_items_for_that_list(self):
@@ -67,7 +67,7 @@ class ListViewTest(TestCase):
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
         
-class ViewListTest(TestCase):
+class NewListTest(TestCase):
     
     def test_can_save_a_POST_request(self):
         self.client.post('/lists/new', data ={'item_text': 'A new list item'})
@@ -78,4 +78,5 @@ class ViewListTest(TestCase):
         
     def test_redirects_after_POST(self):
         response = self.client.post('/lists/new', data={'item_text': 'A new list item'})
-        self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
+        new_list = List.objects.first()
+        self.assertRedirects(response, f'/lists/{new_list.id}/')
