@@ -2,17 +2,19 @@ from email import header
 from selenium import webdriver 
 import unittest
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
+# from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 from selenium.common.exceptions import WebDriverException
 
 MAX_WAIT = 10
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome()
         
     def tearDown(self):
+        self.browser.refresh()
         self.browser.quit()
         
     def wait_for_row_in_list_table(self, row_text):
@@ -113,6 +115,7 @@ class NewVisitorTest(LiveServerTestCase):
     def test_layout_and_styling(self):
         #Edith goes to the home page
         self.browser.get(self.live_server_url)
+        # TODO:WHY???? 1024 & 512 not working
         self.browser.set_window_size(1024, 768)
         
         # She notices the input box is nicely centered
